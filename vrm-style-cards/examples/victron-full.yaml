@@ -1,0 +1,109 @@
+# Full example for a Victron ESS system: 3-phase grid meter, AC-coupled PV inverter,
+# two MPPT solar chargers, two battery monitors, VRM forecasts and own forecasts.
+# All lists can be longer or shorter – boxes and rows adapt automatically.
+type: custom:vrm-dashboard-card
+title: My house
+icon: mdi:home-lightning-bolt-outline
+# language: de            # de | en (default: Home Assistant language)
+# theme: dark             # light | dark (default: Home Assistant theme)
+# cards: [overview, chart, solar_compare, baseload_compare]
+
+grid:
+  name: Grid
+  power: sensor.grid_power
+  phases:
+    - { voltage: sensor.grid_l1_voltage, current: sensor.grid_l1_current, power: sensor.grid_l1_power }
+    - { voltage: sensor.grid_l2_voltage, current: sensor.grid_l2_current, power: sensor.grid_l2_power }
+    - { voltage: sensor.grid_l3_voltage, current: sensor.grid_l3_current, power: sensor.grid_l3_power }
+  # invert: true          # if your meter reports import as negative
+
+ac_loads:
+  phases:
+    - sensor.ac_loads_l1
+    - sensor.ac_loads_l2
+    - sensor.ac_loads_l3
+
+inverter:
+  name: MultiPlus-II 48/5000/70-50
+  state: sensor.system_state            # shown in the blue box (e.g. "External control")
+  dc_voltage: sensor.multiplus_dc_voltage
+  dc_current: sensor.multiplus_dc_current
+  dc_power: sensor.multiplus_dc_power   # + = charging, − = inverting (direction of the flow line)
+
+pv_inverters:                           # AC-coupled PV (Fronius, SMA, ...)
+  - name: Fronius Symo 5.0
+    power: sensor.fronius_power
+    phases:
+      - sensor.fronius_l1_power
+      - sensor.fronius_l2_power
+      - sensor.fronius_l3_power
+
+solar_chargers:                         # DC-coupled PV (MPPT)
+  - name: MPPT roof
+    power: sensor.mppt_roof_power
+    voltage: sensor.mppt_roof_pv_voltage
+    current: sensor.mppt_roof_pv_current
+  - name: MPPT fence
+    power: sensor.mppt_fence_power
+    voltage: sensor.mppt_fence_pv_voltage
+    current: sensor.mppt_fence_pv_current
+
+battery:                                # system battery values (e.g. from the GX device)
+  soc: sensor.battery_soc
+  power: sensor.battery_power
+  voltage: sensor.battery_voltage
+  current: sensor.battery_current
+  state: sensor.battery_state           # idle / charging / discharging (optional)
+  temperature: sensor.battery_temperature
+  ess_state: sensor.ess_batterylife_state
+  # ess_name: "ESS #1"
+
+battery_monitors:                       # shown at the bottom; the one matching the system values is marked "active"
+  - name: JK-BMS
+    soc: sensor.jk_bms_soc
+    voltage: sensor.jk_bms_voltage
+    current: sensor.jk_bms_current
+    power: sensor.jk_bms_power
+  - name: SmartShunt 500A
+    soc: sensor.smartshunt_soc
+    voltage: sensor.smartshunt_voltage
+    current: sensor.smartshunt_current
+    power: sensor.smartshunt_power
+    time_to_go: sensor.smartshunt_time_to_go
+
+total_solar: sensor.total_solar_power   # optional; otherwise PV inverters + solar chargers are added up
+weather: weather.home
+
+energy:                                 # energy counters (kWh, long-term statistics) for chart and comparisons
+  grid_import: sensor.grid_energy_import
+  grid_export: sensor.grid_energy_export
+  solar:                                # all solar yield counters, added up
+    - sensor.mppt_roof_yield_total
+    - sensor.mppt_fence_yield_total
+    - sensor.fronius_energy_total
+  solar_reference: sensor.vrm_pv_production_today   # optional fallback if a device counter is missing
+  solar_today: sensor.vrm_pv_production_today       # optional, daily value for the "Total solar" box
+  battery_charge: sensor.battery_charged_energy
+  battery_discharge: sensor.battery_discharged_energy
+  consumption_power: sensor.ac_loads_total          # optional W sensor: consumption = hourly mean (like VRM)
+  exclude_from_baseload:                            # energy counters that are not part of the base load
+    - sensor.wallbox_energy
+    - sensor.heat_pump_energy
+
+forecast:
+  name: VRM                             # label of the external forecast
+  consumption:                          # Victron Remote Monitoring integration
+    yesterday: sensor.vrm_estimated_energy_consumption_yesterday
+    today: sensor.vrm_estimated_energy_consumption_today
+    tomorrow: sensor.vrm_estimated_energy_consumption_tomorrow
+    current_hour: sensor.vrm_estimated_energy_consumption_current_hour
+    next_hour: sensor.vrm_estimated_energy_consumption_next_hour
+  solar:
+    yesterday: sensor.vrm_estimated_energy_production_yesterday
+    today: sensor.vrm_estimated_energy_production_today
+    tomorrow: sensor.vrm_estimated_energy_production_tomorrow
+    current_hour: sensor.vrm_estimated_energy_production_current_hour
+  hourly: sensor.vrm_forecast_hours     # optional, Node-RED flow in node-red/
+  archive: sensor.vrm_forecast_archive  # optional, package in packages/
+  irradiance: sensor.dwd_irradiance     # optional, DWD global irradiance (attribute "data")
+  # use_energy_dashboard: false         # do not use the solar forecast of the energy dashboard

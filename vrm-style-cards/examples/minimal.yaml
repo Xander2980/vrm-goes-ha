@@ -1,0 +1,24 @@
+# Smallest useful setup: grid, loads, battery, one solar charger, daily chart.
+# Replace the entity ids with your own (Settings → Devices & services → Entities).
+type: custom:vrm-dashboard-card
+title: Cabin
+grid:
+  power: sensor.grid_power
+ac_loads:
+  power: sensor.ac_loads_power
+inverter:
+  state: sensor.system_state
+battery:
+  soc: sensor.battery_soc
+  power: sensor.battery_power
+  voltage: sensor.battery_voltage
+  current: sensor.battery_current
+solar_chargers:
+  - name: MPPT 100/30
+    power: sensor.mppt_pv_power
+energy:
+  grid_import: sensor.grid_energy_import     # kWh counter (total_increasing)
+  grid_export: sensor.grid_energy_export
+  solar:
+    - sensor.mppt_yield_total
+weather: weather.home

@@ -1,0 +1,27 @@
+# The cards can also be used one by one (e.g. in different views).
+# Every card understands the same configuration keys as vrm-dashboard-card;
+# YAML anchors (&system / *system) avoid repeating them in a YAML dashboard.
+views:
+  - title: Energy
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:vrm-overview-card
+            title: My house
+            grid: { power: sensor.grid_power }
+            ac_loads: { power: sensor.ac_loads_power }
+            battery: { soc: sensor.battery_soc, power: sensor.battery_power }
+            solar_chargers: [ sensor.mppt_pv_power ]
+          - type: custom:vrm-chart-card
+            battery: { soc: sensor.battery_soc }
+            energy:
+              grid_import: sensor.grid_energy_import
+              grid_export: sensor.grid_energy_export
+              solar: [ sensor.mppt_yield_total ]
+          - type: custom:vrm-compare-card
+            metric: solar                 # solar | baseload
+            energy:
+              solar: [ sensor.mppt_yield_total ]
+            forecast:
+              irradiance: sensor.dwd_irradiance

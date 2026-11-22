@@ -1,0 +1,197 @@
+[
+ {
+  "id": "b1a2c3d4e5f60001",
+  "type": "tab",
+  "label": "VRM forecast",
+  "disabled": false,
+  "info": "Reads the hourly VRM forecast (Dynamic ESS stats) every 15 minutes and writes it to Home Assistant: sensor.vrm_forecast_hours (attribute 'hours'). Used by VRM Style Cards.\n\nAfter import: open the VRM node and select your VRM API config node and installation (site id); open the sensor node and select your Home Assistant server.",
+  "env": []
+ },
+ {
+  "id": "b1a2c3d4e5f60002",
+  "type": "ha-entity-config",
+  "server": "",
+  "deviceConfig": "",
+  "name": "VRM forecast hours",
+  "version": 6,
+  "entityType": "sensor",
+  "haConfig": [
+   {
+    "property": "name",
+    "value": "VRM forecast hours"
+   },
+   {
+    "property": "icon",
+    "value": "mdi:chart-bar"
+   },
+   {
+    "property": "entity_picture",
+    "value": ""
+   },
+   {
+    "property": "entity_category",
+    "value": ""
+   },
+   {
+    "property": "device_class",
+    "value": "energy"
+   },
+   {
+    "property": "unit_of_measurement",
+    "value": "kWh"
+   },
+   {
+    "property": "state_class",
+    "value": ""
+   }
+  ],
+  "resend": true,
+  "debugEnabled": false
+ },
+ {
+  "id": "b1a2c3d4e5f60003",
+  "type": "inject",
+  "z": "b1a2c3d4e5f60001",
+  "name": "every 15 min",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "900",
+  "crontab": "",
+  "once": true,
+  "onceDelay": "20",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "x": 140,
+  "y": 120,
+  "wires": [
+   [
+    "b1a2c3d4e5f60004"
+   ]
+  ]
+ },
+ {
+  "id": "b1a2c3d4e5f60004",
+  "type": "vrm-api",
+  "z": "b1a2c3d4e5f60001",
+  "vrm": "",
+  "name": "VRM Dynamic ESS forecast",
+  "api_type": "installations",
+  "idUser": "",
+  "idSite": "YOUR_SITE_ID",
+  "installations": "stats",
+  "attribute": "dynamic_ess",
+  "stats_interval": "hours",
+  "show_instance": false,
+  "stats_start": "bod",
+  "stats_end": "eot",
+  "use_utc": false,
+  "gps_start": "",
+  "gps_end": "",
+  "widgets": "SolarChargerSummary",
+  "instance": "",
+  "store_in_global_context": false,
+  "verbose": false,
+  "transform_price_schedule": false,
+  "outputs": 1,
+  "x": 370,
+  "y": 120,
+  "wires": [
+   [
+    "b1a2c3d4e5f60005"
+   ]
+  ]
+ },
+ {
+  "id": "b1a2c3d4e5f60005",
+  "type": "function",
+  "z": "b1a2c3d4e5f60001",
+  "name": "Hourly forecast + base load",
+  "func": "// VRM Dynamic ESS stats -> hourly forecast for VRM Style Cards (Home Assistant)\n// Per hour: consumption, base load, EV charger, heat pump, solar (kWh)\nconst r = (msg.payload && msg.payload.records) || {};\nconst keys = Object.keys(r);\nconst ser = (k) => (k && Array.isArray(r[k]) && r[k].length ? r[k] : null);\nconst pick = (...ks) => { for (const k of ks) { const s = ser(k); if (s) return { k, s }; } return { k: null, s: [] }; };\nconst H = 3600000;\n// series -> Map(hour start -> kWh); Wh is detected automatically\nconst toMap = (arr) => {\n    const m = new Map();\n    let max = 0;\n    for (const row of arr) { const v = Number(row[1]); if (!isNaN(v)) max = Math.max(max, Math.abs(v)); }\n    const f = max > 30 ? 1 / 1000 : 1;   // > 30 per hour can only be Wh\n    for (const row of arr) {\n        const v = Number(row[1]);\n        if (isNaN(v)) continue;\n        const t = Math.floor(Number(row[0]) / H) * H;\n        m.set(t, (m.get(t) || 0) + v * f);\n    }\n    return m;\n};\nconst cons = pick('vrm_consumption_fc_adj', 'vrm_consumption_fc');\nconst ev = pick('vrm_consum_evcs_fc_adj', 'vrm_consum_evcs_fc');\nconst hp = pick('vrm_consum_hp_fc_adj', 'vrm_consum_hp_fc');\nconst baseKey = keys.find((k) => /base/i.test(k) && /fc/i.test(k) && ser(k));\nconst sol = pick('solar_yield_forecast');\nconst mC = toMap(cons.s), mE = toMap(ev.s), mH = toMap(hp.s);\nconst mB = baseKey ? toMap(r[baseKey]) : null;\nlet mS = toMap(sol.s);\nif (!sol.k) {   // fallback: PV inverter + PV charger separately\n    const a = toMap(ser('vrm_pv_inverter_yield_fc') || []), b = toMap(ser('vrm_pv_charger_yield_fc') || []);\n    mS = new Map(a); for (const [t, v] of b) mS.set(t, (mS.get(t) || 0) + v);\n}\nconst times = [...new Set([...mC.keys(), ...mS.keys()])].sort((x, y) => x - y);\nconst rd = (v) => Math.round(v * 1000) / 1000;\nconst hours = times.map((t) => {\n    const c = mC.has(t) ? mC.get(t) : null;\n    const e = mE.get(t) || 0, h = mH.get(t) || 0;\n    let base = mB ? (mB.has(t) ? mB.get(t) : null) : (c == null ? null : Math.max(0, c - e - h));\n    return { t, consumption: c == null ? null : rd(c), baseload: base == null ? null : rd(base), ev: rd(e), heat_pump: rd(h), solar: mS.has(t) ? rd(mS.get(t)) : null };\n});\nconst d0 = new Date(); d0.setHours(0, 0, 0, 0);\nconst d1 = d0.getTime() + 24 * H;\nconst today = hours.filter((s) => s.t >= d0.getTime() && s.t < d1);   // sums for today only, hours until end of tomorrow\nconst sum = (k) => rd(today.reduce((a, s) => a + (s[k] || 0), 0));\nmsg.hours = hours;\nmsg.consumption_today = sum('consumption');\nmsg.baseload_today = sum('baseload');\nmsg.solar_today = sum('solar');\nmsg.sources = { consumption: cons.k, baseload: baseKey || 'consumption - ev - heat_pump', ev: ev.k, heat_pump: hp.k, solar: sol.k || 'pv_inverter + pv_charger' };\nmsg.fields = keys;\nmsg.payload = msg.consumption_today;\nnode.status({ fill: hours.length ? 'green' : 'yellow', shape: 'dot', text: `${hours.length} h · ${msg.consumption_today} kWh · base load ${msg.baseload_today} kWh` });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 640,
+  "y": 120,
+  "wires": [
+   [
+    "b1a2c3d4e5f60006",
+    "b1a2c3d4e5f60007"
+   ]
+  ]
+ },
+ {
+  "id": "b1a2c3d4e5f60006",
+  "type": "ha-sensor",
+  "z": "b1a2c3d4e5f60001",
+  "name": "VRM forecast hours",
+  "entityConfig": "b1a2c3d4e5f60002",
+  "version": 1,
+  "state": "payload",
+  "stateType": "msg",
+  "available": "true",
+  "availableType": "bool",
+  "attributes": [
+   {
+    "property": "hours",
+    "value": "hours",
+    "valueType": "msg"
+   },
+   {
+    "property": "consumption_today",
+    "value": "consumption_today",
+    "valueType": "msg"
+   },
+   {
+    "property": "baseload_today",
+    "value": "baseload_today",
+    "valueType": "msg"
+   },
+   {
+    "property": "solar_today",
+    "value": "solar_today",
+    "valueType": "msg"
+   },
+   {
+    "property": "sources",
+    "value": "sources",
+    "valueType": "msg"
+   },
+   {
+    "property": "fields",
+    "value": "fields",
+    "valueType": "msg"
+   }
+  ],
+  "inputOverride": "allow",
+  "outputProperties": [],
+  "x": 920,
+  "y": 120,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "b1a2c3d4e5f60007",
+  "type": "debug",
+  "z": "b1a2c3d4e5f60001",
+  "name": "Forecast (debug)",
+  "active": false,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "true",
+  "targetType": "full",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 910,
+  "y": 180,
+  "wires": []
+ }
+]

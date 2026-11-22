@@ -1,0 +1,63 @@
+# VRM Style Cards – forecast archive (optional)
+#
+# Stores once per day the solar forecast as it was at the beginning of the day, so the
+# solar comparison card can show for past days how good the forecast really was
+# (instead of recalculating with the measured weather).
+#
+# Installation:
+#   1. Copy this file to /config/packages/ (configuration.yaml needs
+#      "homeassistant: packages: !include_dir_named packages").
+#   2. Replace the three entity ids below (IRRADIANCE, HOURLY, DAY) – or delete the
+#      lines of a source you do not have.
+#   3. Developer tools → YAML → reload "Template entities".
+#   4. Card config: forecast: archive: sensor.vrm_forecast_archive
+#
+# Sources:
+#   IRRADIANCE  DWD integration, sensor "global irradiance" (attribute "data" = hourly forecast)
+#   HOURLY      "Hourly forecast" sensor of the VRM Forecast integration (attribute "hours"),
+#               or the sensor of the Node-RED flow in node-red/
+#   DAY         "Solar today" sensor of the VRM Forecast integration (or Victron Remote Monitoring)
+#
+# Attribute "days": { "YYYY-MM-DD": { t0, irradiance[24], vrm[24], vrm_day, time } }
+# The first entry of a day is kept; entries older than 35 days are removed.
+
+template:
+  - trigger:
+      - trigger: time
+        at: "00:20:00"
+      - trigger: time_pattern     # catches up if HA was off at 00:20
+        minutes: 50
+      - trigger: event
+        event_type: event_template_reloaded
+    sensor:
+      - name: "VRM forecast archive"
+        unique_id: vrm_style_cards_forecast_archive
+        icon: mdi:archive-clock-outline
+        state: "{{ now().strftime('%Y-%m-%d') }}"
+        attributes:
+          days: >-
+            {% set IRRADIANCE = 'sensor.dwd_irradiance' %}
+            {% set HOURLY = 'sensor.vrm_my_house_hourly_forecast' %}
+            {% set DAY = 'sensor.vrm_my_house_solar_today' %}
+            {% set old = this.attributes.get('days', {}) if this is defined and this.attributes is defined else {} %}
+            {% set old = old if old is mapping else {} %}
+            {% set key = now().strftime('%Y-%m-%d') %}
+            {% set d = state_attr(IRRADIANCE, 'data') or [] %}
+            {% set s = state_attr(HOURLY, 'hours') or state_attr(HOURLY, 'stunden') or [] %}
+            {% if key in old or (d | count == 0 and s | count == 0) %}
+            {{ old }}
+            {% else %}
+            {% set t0 = as_timestamp(today_at('00:00')) | int %}
+            {% set limit = (now() - timedelta(days=35)).strftime('%Y-%m-%d') %}
+            {% set ns = namespace(irr=[], vrm=[], out={}) %}
+            {% for i in range(24) %}
+            {% set zs = ((t0 + (i + 1) * 3600) | timestamp_custom('%Y-%m-%dT%H:00:00.000Z', false)) %}
+            {% set g = d | selectattr('datetime', 'eq', zs) | map(attribute='value') | first | default(none) %}
+            {% set v = s | selectattr('t', 'eq', (t0 + i * 3600) * 1000) | map(attribute='solar') | first | default(none) %}
+            {% set ns.irr = ns.irr + [g | round(0) | int if g is number else none] %}
+            {% set ns.vrm = ns.vrm + [v | round(3) if v is number else none] %}
+            {% endfor %}
+            {% for k, v in old.items() if k >= limit %}{% set ns.out = dict(ns.out, **{k: v}) %}{% endfor %}
+            {% set vd = states(DAY) | float(none) %}
+            {{ dict(ns.out, **{key: {'t0': t0 * 1000, 'irradiance': ns.irr, 'vrm': ns.vrm, 'vrm_day': (vd | round(2)) if vd is number else none, 'time': now().isoformat(timespec='minutes')}}) }}
+            {% endif %}

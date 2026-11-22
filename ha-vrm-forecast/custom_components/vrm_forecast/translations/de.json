@@ -1,0 +1,84 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "VRM-Zugriffstoken",
+        "description": "Erstelle im VRM-Portal ein Zugriffstoken: Einstellungen → Integrationen → Zugriffstoken (https://vrm.victronenergy.com/access-tokens). Lesezugriff reicht.",
+        "data": {
+          "api_token": "Zugriffstoken"
+        }
+      },
+      "site": {
+        "title": "Installation",
+        "description": "Wähle die Installation, deren Prognose gelesen werden soll.",
+        "data": {
+          "site_id": "Installation"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Neues VRM-Zugriffstoken",
+        "description": "Das Token ist nicht mehr gültig. Bitte ein neues eingeben.",
+        "data": {
+          "api_token": "Zugriffstoken"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Das Token ist ungültig.",
+      "cannot_connect": "VRM ist nicht erreichbar. Bitte später erneut versuchen.",
+      "no_sites": "Zu diesem Token gibt es keine Installationen.",
+      "site_missing": "Die Installation dieses Eintrags ist mit diesem Token nicht verfügbar."
+    },
+    "abort": {
+      "already_configured": "Diese Installation ist schon eingerichtet.",
+      "reauth_successful": "Das Token wurde aktualisiert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Einstellungen",
+        "data": {
+          "scan_interval": "Abfrage-Intervall"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "hourly": {
+        "name": "Stundenprognose"
+      },
+      "consumption_today": {
+        "name": "Verbrauch heute"
+      },
+      "consumption_tomorrow": {
+        "name": "Verbrauch morgen"
+      },
+      "baseload_today": {
+        "name": "Grundlast heute"
+      },
+      "baseload_tomorrow": {
+        "name": "Grundlast morgen"
+      },
+      "solar_today": {
+        "name": "Solar heute"
+      },
+      "solar_tomorrow": {
+        "name": "Solar morgen"
+      },
+      "consumption_current_hour": {
+        "name": "Verbrauch aktuelle Stunde"
+      },
+      "consumption_next_hour": {
+        "name": "Verbrauch nächste Stunde"
+      },
+      "solar_current_hour": {
+        "name": "Solar aktuelle Stunde"
+      },
+      "solar_next_hour": {
+        "name": "Solar nächste Stunde"
+      }
+    }
+  }
+}

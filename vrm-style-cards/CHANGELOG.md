@@ -1,0 +1,13 @@
+# Changelog
+
+## 1.0.0
+- First public version.
+- Cards: `vrm-dashboard-card` (all in one), `vrm-overview-card`, `vrm-chart-card`, `vrm-compare-card`.
+- Every device is configurable: any number of grid / load phases, PV inverters, solar chargers and battery monitors.
+- Active battery monitor is detected automatically.
+- Time range picker like VRM (quick select, custom, up to 10 days into the future).
+- Own consumption, base load and solar forecasts; comparison with VRM (or any other) forecast.
+- Optional forecast archive (template package) and VRM hourly forecast (Node-RED flow).
+- German and English, light and dark theme, desktop and phone layout.
+- Visual editor with automatic detection of the Victron GX integration and of the VRM Forecast integration.
+- `energy.consumption_power` accepts a list of power sensors.

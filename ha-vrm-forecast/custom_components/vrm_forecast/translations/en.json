@@ -1,0 +1,84 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "VRM access token",
+        "description": "Create an access token in the VRM portal: Preferences → Integrations → Access tokens (https://vrm.victronenergy.com/access-tokens). Read access is enough.",
+        "data": {
+          "api_token": "Access token"
+        }
+      },
+      "site": {
+        "title": "Installation",
+        "description": "Choose the installation whose forecast should be read.",
+        "data": {
+          "site_id": "Installation"
+        }
+      },
+      "reauth_confirm": {
+        "title": "New VRM access token",
+        "description": "The token is not valid any more. Enter a new one.",
+        "data": {
+          "api_token": "Access token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The token is not valid.",
+      "cannot_connect": "VRM cannot be reached. Try again later.",
+      "no_sites": "This token has no installations.",
+      "site_missing": "The installation of this entry is not available with this token."
+    },
+    "abort": {
+      "already_configured": "This installation is already set up.",
+      "reauth_successful": "The token was updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Settings",
+        "data": {
+          "scan_interval": "Update interval"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "hourly": {
+        "name": "Hourly forecast"
+      },
+      "consumption_today": {
+        "name": "Consumption today"
+      },
+      "consumption_tomorrow": {
+        "name": "Consumption tomorrow"
+      },
+      "baseload_today": {
+        "name": "Base load today"
+      },
+      "baseload_tomorrow": {
+        "name": "Base load tomorrow"
+      },
+      "solar_today": {
+        "name": "Solar today"
+      },
+      "solar_tomorrow": {
+        "name": "Solar tomorrow"
+      },
+      "consumption_current_hour": {
+        "name": "Consumption current hour"
+      },
+      "consumption_next_hour": {
+        "name": "Consumption next hour"
+      },
+      "solar_current_hour": {
+        "name": "Solar current hour"
+      },
+      "solar_next_hour": {
+        "name": "Solar next hour"
+      }
+    }
+  }
+}
