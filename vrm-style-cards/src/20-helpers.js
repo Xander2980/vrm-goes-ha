@@ -58,6 +58,12 @@ function vrmGhiClear(t, lat, lon) { const c = vrmSunCos(t, lat, lon); return c <
 // Gemeinsamer Abfrage-Cache für alle Karten (4,5 min), damit gleiche Statistik-Abfragen nur einmal laufen
 const VRM_WS_CACHE = new Map();
 function vrmWS(h, msg) {
+  if (msg.type === "recorder/statistics_during_period") {
+    // HA rejects null ids and an empty list – drop unset sensors, skip the call if none remain
+    const ids = (msg.statistic_ids || []).filter(Boolean);
+    if (!ids.length) return Promise.resolve({});
+    msg = Object.assign({}, msg, { statistic_ids: ids });
+  }
   const k = JSON.stringify(msg), n = Date.now(), c = VRM_WS_CACHE.get(k);
   if (c && n - c.t < 270000) return c.p;
   const p = h.callWS(msg);

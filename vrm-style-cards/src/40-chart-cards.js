@@ -313,6 +313,7 @@ class VrmChartCard extends HTMLElement {
     if (!this._hass) return;
     if (this._loading) { this._pending = true; return; }
     if (!force && this._data && Date.now() - this._last < 5 * 60 * 1000) return;
+    if (!force && !this._data && Date.now() - (this._errAt || 0) < 60 * 1000) return;   // after an error: retry at most once a minute
     this._loading = true;
     const r = this._range();
     try {
@@ -333,9 +334,11 @@ class VrmChartCard extends HTMLElement {
       if (r !== this._range()) return;                       // inzwischen anderer Zeitraum
       this._data = data;
       this._last = Date.now();
+      this._errAt = 0;
       this._renderChart();
       this._renderTiles();
     } catch (err) {
+      this._errAt = Date.now();
       const m = this._root && this._root.getElementById("msg");
       if (m) { m.style.display = ""; m.textContent = `${L_("Fehler beim Laden")}: ${err && err.message ? err.message : err}`; }
     } finally {
