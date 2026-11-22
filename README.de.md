@@ -16,6 +16,17 @@ Die Integration lädt die Karten automatisch auf jedem Dashboard – keine Resso
 > „Victron Energy“ und „VRM“ sind Marken bzw. Namen der Victron Energy B.V. und werden hier nur verwendet, um die
 > Kompatibilität zu beschreiben.
 
+![Übersicht](cards/docs/overview.png)
+
+![Diagramm mit Prognosen](cards/docs/chart.png)
+
+![Solarprognose-Vergleich](cards/docs/compare.png)
+
+<p>
+  <img src="cards/docs/mobile-overview.png" alt="Handy-Ansicht: Übersicht" width="300">
+  <img src="cards/docs/mobile-chart.png" alt="Handy-Ansicht: Diagramm" width="300">
+</p>
+
 ## Funktionen
 
 - **Übersicht**: Netz, AC-Lasten, Wechselrichter/Lader, AC-gekoppelte PV-Wechselrichter, DC-Laderegler (MPPT),

@@ -15,7 +15,16 @@ The integration loads the cards on every dashboard automatically – no resource
 > Unofficial project, not affiliated with or endorsed by Victron Energy. "Victron", "Victron Energy" and "VRM" are
 > trademarks or names of Victron Energy B.V. and are only used to describe compatibility.
 
-<!-- Add screenshots to cards/docs/ and link them here, e.g. ![Overview](cards/docs/overview.png) -->
+![Overview](cards/docs/overview.png)
+
+![Chart with forecasts](cards/docs/chart.png)
+
+![Solar forecast comparison](cards/docs/compare.png)
+
+<p>
+  <img src="cards/docs/mobile-overview.png" alt="Phone layout: overview" width="300">
+  <img src="cards/docs/mobile-chart.png" alt="Phone layout: chart" width="300">
+</p>
 
 ## Features
 
