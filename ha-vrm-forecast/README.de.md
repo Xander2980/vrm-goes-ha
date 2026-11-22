@@ -13,6 +13,15 @@ nutzen (Automationen, Energieplanung, andere Karten).
 
 ## Installation
 
+Direkt in Home Assistant öffnen (HACS nötig):
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=ha-vrm-forecast&category=integration)
+
+Nach Installation und Neustart einrichten:
+
+[![Open your Home Assistant instance and start setting up VRM Forecast.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=vrm_forecast)
+
+
 **HACS:** HACS → ⋮ → *Benutzerdefinierte Repositories* → `https://github.com/Xander2980/ha-vrm-forecast`, Typ **Integration** →
 **VRM Forecast** installieren → Home Assistant neu starten.
 

@@ -30,6 +30,11 @@ have, and any energy counters you like. The cards work without Victron hardware,
 
 ## Installation
 
+Open directly in Home Assistant (needs HACS):
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=vrm-style-cards&category=plugin)
+
+
 ### HACS (custom repository)
 1. HACS → ⋮ → *Custom repositories* → add `https://github.com/Xander2980/vrm-style-cards`, type **Dashboard**.
 2. Install **VRM Style Cards**, then reload the browser (Ctrl+F5 / pull down in the app).

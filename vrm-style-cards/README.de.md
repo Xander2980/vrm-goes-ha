@@ -28,6 +28,11 @@ Home Assistant vorhanden sind.
 
 ## Installation
 
+Direkt in Home Assistant öffnen (HACS nötig):
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=vrm-style-cards&category=plugin)
+
+
 ### HACS (benutzerdefiniertes Repository)
 1. HACS → ⋮ → *Benutzerdefinierte Repositories* → `https://github.com/Xander2980/vrm-style-cards` hinzufügen, Typ **Dashboard**.
 2. **VRM Style Cards** installieren und den Browser neu laden (Strg+F5 bzw. in der App nach unten ziehen).

@@ -13,6 +13,15 @@ Made for [VRM Style Cards](https://github.com/Xander2980/vrm-style-cards), but t
 
 ## Installation
 
+Open directly in Home Assistant (needs HACS):
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=ha-vrm-forecast&category=integration)
+
+After installing and restarting, set it up:
+
+[![Open your Home Assistant instance and start setting up VRM Forecast.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=vrm_forecast)
+
+
 **HACS:** HACS → ⋮ → *Custom repositories* → `https://github.com/Xander2980/ha-vrm-forecast`, type **Integration** →
 install **VRM Forecast** → restart Home Assistant.
 
