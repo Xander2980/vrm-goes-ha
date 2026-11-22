@@ -99,6 +99,24 @@ class VrmForecastConfigFlow(ConfigFlow, domain=DOMAIN):
                     entry, data_updates={CONF_API_TOKEN: user_input[CONF_API_TOKEN].strip()})
         return self.async_show_form(step_id="reauth_confirm", data_schema=TOKEN_SCHEMA, errors=errors)
 
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Change the access token (Settings → Devices & services → VRM goes HA → ⋮ → Reconfigure)."""
+        errors: dict[str, str] = {}
+        entry = self._get_reconfigure_entry()
+        if user_input is not None:
+            sites, error = await self._check_token(user_input[CONF_API_TOKEN])
+            if error:
+                errors["base"] = error
+            elif str(entry.data[CONF_SITE_ID]) not in sites:
+                errors["base"] = "site_missing"
+            else:
+                return self.async_update_reload_and_abort(
+                    entry, data_updates={CONF_API_TOKEN: user_input[CONF_API_TOKEN].strip()})
+        return self.async_show_form(
+            step_id="reconfigure", data_schema=TOKEN_SCHEMA, errors=errors,
+            description_placeholders={"tokens_url": TOKENS_URL},
+        )
+
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:

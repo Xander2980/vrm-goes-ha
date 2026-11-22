@@ -70,3 +70,16 @@ async def test_options(hass, aioclient_mock):
     result = await hass.config_entries.options.async_configure(result["flow_id"], {"scan_interval": 30})
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options == {"scan_interval": 30}
+
+
+async def test_reconfigure_token(hass, aioclient_mock):
+    _mock_api(aioclient_mock)
+    entry = MockConfigEntry(domain=DOMAIN, unique_id="123456", data={"api_token": "old", "site_id": 123456, "site_name": "My house"})
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    result = await entry.start_reconfigure_flow(hass)
+    assert result["type"] is FlowResultType.FORM and result["step_id"] == "reconfigure"
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"api_token": " new "})
+    assert result["type"] is FlowResultType.ABORT and result["reason"] == "reconfigure_successful"
+    assert entry.data["api_token"] == "new"

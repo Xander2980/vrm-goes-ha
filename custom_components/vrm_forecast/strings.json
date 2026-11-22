@@ -15,6 +15,13 @@
           "site_id": "Installation"
         }
       },
+      "reconfigure": {
+        "title": "Change VRM access token",
+        "description": "Enter a new access token for this installation ({tokens_url}).",
+        "data": {
+          "api_token": "Access token"
+        }
+      },
       "reauth_confirm": {
         "title": "New VRM access token",
         "description": "The token is not valid any more. Enter a new one.",
@@ -31,7 +38,8 @@
     },
     "abort": {
       "already_configured": "This installation is already set up.",
-      "reauth_successful": "The token was updated."
+      "reauth_successful": "The token was updated.",
+      "reconfigure_successful": "The token was updated."
     }
   },
   "options": {

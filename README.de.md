@@ -75,6 +75,8 @@ unter Einstellungen → Dashboards → ⋮ → *Ressourcen* `/local/vrm-style-ca
 
 Das Token speichert Home Assistant wie bei jeder anderen Integration (in `.storage`), nicht in YAML.
 
+**Token ändern:** Einstellungen → Geräte & Dienste → **VRM goes HA** → ⋮ → *Neu konfigurieren* → neues Token eingeben.
+
 ## Einrichtung im Dashboard-Editor (ohne YAML)
 
 Im Dashboard-Editor die Karte **VRM Style – Dashboard** (oder eine Einzelkarte) hinzufügen. Das Formular hat für jeden

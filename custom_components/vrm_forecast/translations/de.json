@@ -15,6 +15,13 @@
           "site_id": "Installation"
         }
       },
+      "reconfigure": {
+        "title": "VRM-Zugriffstoken ändern",
+        "description": "Neues Zugriffstoken für diese Installation eingeben ({tokens_url}).",
+        "data": {
+          "api_token": "Zugriffstoken"
+        }
+      },
       "reauth_confirm": {
         "title": "Neues VRM-Zugriffstoken",
         "description": "Das Token ist nicht mehr gültig. Bitte ein neues eingeben.",
@@ -31,7 +38,8 @@
     },
     "abort": {
       "already_configured": "Diese Installation ist schon eingerichtet.",
-      "reauth_successful": "Das Token wurde aktualisiert."
+      "reauth_successful": "Das Token wurde aktualisiert.",
+      "reconfigure_successful": "Das Token wurde aktualisiert."
     }
   },
   "options": {

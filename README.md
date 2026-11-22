@@ -75,6 +75,8 @@ VRM access token copy `custom_components/vrm_forecast/frontend/vrm-style-cards.j
 
 The token is stored like the credentials of every other integration (in `.storage`), not in YAML.
 
+**Change the token:** Settings → Devices & services → **VRM goes HA** → ⋮ → *Reconfigure* → enter the new token.
+
 ## Setup in the dashboard editor (no YAML)
 
 Add the card **VRM Style – Dashboard** (or one of the single cards) in the dashboard editor. The form has a section

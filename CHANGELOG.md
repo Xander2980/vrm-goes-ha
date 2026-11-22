@@ -1,6 +1,8 @@
 # Changelog
 
 ## 1.1.1
+- Own icon for the integration (shown under Settings → Devices & services, needs Home Assistant 2026.3 or newer).
+- Change the VRM access token without removing the integration: Settings → Devices & services → VRM goes HA → ⋮ → *Reconfigure*.
 - Fix: phone layout – the power value of the PV inverter and PV charger boxes and the ESS line of the battery box were covered by the rows below.
 
 ## 1.1.0
