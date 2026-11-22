@@ -18,7 +18,7 @@ from homeassistant.helpers.selector import (
 from .api import VrmApi, VrmAuthError, VrmConnectionError
 from .const import (
     CONF_API_TOKEN, CONF_SCAN_INTERVAL, CONF_SITE_ID, CONF_SITE_NAME,
-    DEFAULT_SCAN_INTERVAL, DOMAIN, MAX_SCAN_INTERVAL, MIN_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL, DOMAIN, MAX_SCAN_INTERVAL, MIN_SCAN_INTERVAL, TOKENS_URL,
 )
 
 TOKEN_SCHEMA = vol.Schema({
@@ -59,7 +59,10 @@ class VrmForecastConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._token = user_input[CONF_API_TOKEN].strip()
                 self._sites = sites
                 return await self.async_step_site()
-        return self.async_show_form(step_id="user", data_schema=TOKEN_SCHEMA, errors=errors)
+        return self.async_show_form(
+            step_id="user", data_schema=TOKEN_SCHEMA, errors=errors,
+            description_placeholders={"tokens_url": TOKENS_URL},
+        )
 
     async def async_step_site(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Step 2: choose the installation."""

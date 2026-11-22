@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "VRM-Zugriffstoken",
-        "description": "Erstelle im VRM-Portal ein Zugriffstoken: Einstellungen → Integrationen → Zugriffstoken (https://vrm.victronenergy.com/access-tokens). Lesezugriff reicht.",
+        "description": "Erstelle im VRM-Portal ein Zugriffstoken: Einstellungen → Integrationen → Zugriffstoken ({tokens_url}). Lesezugriff reicht.",
         "data": {
           "api_token": "Zugriffstoken"
         }

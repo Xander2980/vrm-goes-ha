@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "VRM access token",
-        "description": "Create an access token in the VRM portal: Preferences → Integrations → Access tokens (https://vrm.victronenergy.com/access-tokens). Read access is enough.",
+        "description": "Create an access token in the VRM portal: Preferences → Integrations → Access tokens ({tokens_url}). Read access is enough.",
         "data": {
           "api_token": "Access token"
         }

@@ -3,6 +3,7 @@
 DOMAIN = "vrm_forecast"
 
 API_BASE = "https://vrmapi.victronenergy.com/v2"
+TOKENS_URL = "https://vrm.victronenergy.com/access-tokens"
 
 CONF_API_TOKEN = "api_token"
 CONF_SITE_ID = "site_id"
