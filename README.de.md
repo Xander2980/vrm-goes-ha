@@ -1,14 +1,20 @@
-# VRM Style Cards für Home Assistant
+# VRM goes HA
 
 [🇬🇧 English](README.md)
 
-Lovelace-Karten im Aussehen des **Victron-VRM-Portals**: Energiefluss-Übersicht, Diagramm für Verbrauch, Solar und
-Batterie mit Prognosen sowie ein Vergleich der eigenen Prognose mit der VRM-Prognose.
-Alle Geräte werden per YAML eingestellt: beliebig viele Netzphasen, PV-Wechselrichter, Laderegler und
-Batteriewächter, beliebige Energiezähler. Die Karten funktionieren auch ohne Victron-Geräte, solange die Sensoren in
-Home Assistant vorhanden sind.
+Das Aussehen des **Victron-VRM-Portals** in Home Assistant – eine Integration mit zwei Teilen:
 
-> Kein offizielles Produkt von Victron Energy. „Victron“ und „VRM“ sind Marken der Victron Energy B.V.
+- **VRM-Style-Karten**: Energiefluss-Übersicht, Diagramm für Verbrauch, Solar und Batterie mit Prognosen sowie ein
+  Vergleich der eigenen Prognose mit der VRM-Prognose. Jedes Gerät ist einstellbar: beliebig viele Netzphasen,
+  PV-Wechselrichter, Laderegler und Batteriewächter. Die Karten funktionieren mit beliebigen Sensoren, nicht nur mit Victron.
+- **VRM-Prognose-Sensoren**: die stündliche Prognose aus dem VRM-Portal (Verbrauch, Grundlast, Wallbox, Wärmepumpe,
+  Solar – heute und morgen), eingerichtet über die Oberfläche mit dem VRM-Zugriffstoken.
+
+Die Integration lädt die Karten automatisch auf jedem Dashboard – keine Ressource eintragen, kein zweites Repository.
+
+> Inoffizielles Projekt, nicht mit Victron Energy verbunden und nicht von Victron Energy unterstützt. „Victron“,
+> „Victron Energy“ und „VRM“ sind Marken bzw. Namen der Victron Energy B.V. und werden hier nur verwendet, um die
+> Kompatibilität zu beschreiben.
 
 ## Funktionen
 
@@ -25,22 +31,38 @@ Home Assistant vorhanden sind.
 - **Vergleichskarte**: eigene Prognose gegen VRM-Prognose (oder eine andere) gegen Ist – je Stunde und Tag, mit mittlerem Fehler.
 - **Prognose-Archiv** (optional): speichert die Prognose jedes Tages, damit vergangene Tage mit der damaligen Prognose verglichen werden.
 - Deutsch und Englisch, hell und dunkel, eigenes Handy-Layout.
+- **VRM-Prognose-Sensoren**: Verbrauch, Grundlast und Solar für heute, morgen, die laufende und die nächste Stunde,
+  dazu eine Stundenliste für die Diagramme.
 
 ## Installation
 
 Direkt in Home Assistant öffnen (HACS nötig):
 
-[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=vrm-style-cards&category=plugin)
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xander2980&repository=vrm-goes-ha&category=integration)
 
+1. **VRM goes HA** in HACS installieren (oder: HACS → ⋮ → *Benutzerdefinierte Repositories* →
+   `https://github.com/Xander2980/vrm-goes-ha`, Typ **Integration**).
+2. Home Assistant neu starten.
+3. Integration einrichten:
 
-### HACS (benutzerdefiniertes Repository)
-1. HACS → ⋮ → *Benutzerdefinierte Repositories* → `https://github.com/Xander2980/vrm-style-cards` hinzufügen, Typ **Dashboard**.
-2. **VRM Style Cards** installieren und den Browser neu laden (Strg+F5 bzw. in der App nach unten ziehen).
+   [![Open your Home Assistant instance and start setting up VRM goes HA.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=vrm_forecast)
 
-### Von Hand
-1. `dist/vrm-style-cards.js` nach `/config/www/vrm-style-cards.js` kopieren.
-2. Einstellungen → Dashboards → ⋮ → *Ressourcen* → `/local/vrm-style-cards.js` als **JavaScript-Modul** hinzufügen.
-3. Browser neu laden.
+4. Browser neu laden (Strg+F5 bzw. in der App nach unten ziehen). Die Karten stehen jetzt im Dashboard-Editor zur Auswahl.
+
+**Von Hand:** `custom_components/vrm_forecast` nach `/config/custom_components/` kopieren und Home Assistant neu starten.
+
+**Nur die Karten, ohne VRM-Konto:** Die Karten werden von der Integration geladen und brauchen sie daher eingerichtet.
+Ohne VRM-Zugriffstoken `custom_components/vrm_forecast/frontend/vrm-style-cards.js` nach `/config/www/` kopieren und
+unter Einstellungen → Dashboards → ⋮ → *Ressourcen* `/local/vrm-style-cards.js` als **JavaScript-Modul** hinzufügen.
+
+## Einrichtung der Prognose
+
+1. Im VRM-Portal ein Zugriffstoken erstellen: *Einstellungen → Integrationen → Zugriffstoken*
+   (https://vrm.victronenergy.com/access-tokens).
+2. Einstellungen → Geräte & Dienste → *Integration hinzufügen* → **VRM goes HA** → Token einfügen.
+3. Installation wählen. Fertig – die Sensoren werden alle 15 Minuten aktualisiert (in den Optionen der Integration änderbar).
+
+Das Token speichert Home Assistant wie bei jeder anderen Integration (in `.storage`), nicht in YAML.
 
 ## Einrichtung im Dashboard-Editor (ohne YAML)
 
@@ -50,7 +72,7 @@ automatisch:
 
 - **Victron GX automatisch erkennen** – übernimmt alle Geräte der Integration *Victron GX* (Netzzähler, PV-Wechselrichter,
   Laderegler, MultiPlus/Quattro, Batterie und Batteriewächter samt Energiezählern).
-- **VRM-Prognose-Integration erkennen** – trägt die Sensoren von [VRM Forecast](https://github.com/Xander2980/ha-vrm-forecast) ein.
+- **VRM-Prognose-Integration erkennen** – trägt die Sensoren von dieser Integration ein.
 
 Danach prüfen und Wetter sowie (optional) Einstrahlung ergänzen. Alles bleibt auch in YAML bearbeitbar.
 
@@ -77,7 +99,7 @@ weather: weather.home
 ```
 
 Die Karte am besten in eine **Panel-Ansicht** (oder einen Abschnitt in voller Breite) legen. Sie passt sich der Breite an
-und schaltet unter 700 px auf das Handy-Layout um. Weitere Beispiele: [`examples/`](examples/).
+und schaltet unter 700 px auf das Handy-Layout um. Weitere Beispiele: [`cards/examples/`](cards/examples/).
 
 ## Karten
 
@@ -112,20 +134,40 @@ Die Zähler brauchen **Langzeitstatistik** (`state_class: total_increasing`), de
 `state_class: measurement`. `forecast.irradiance` erwartet das Format der **DWD-Integration** (Attribut `data` mit
 stündlichen Werten in W/m²).
 
+## Prognose-Sensoren (kWh)
+
+| Sensor | Inhalt |
+|---|---|
+| Stundenprognose | Zustand = Verbrauch heute; Attribut `hours`: Liste `{t, consumption, baseload, ev, heat_pump, solar}` (t = Stundenbeginn in ms, kWh) für heute und morgen; Attribut `sources`: welche VRM-Reihen benutzt wurden |
+| Verbrauch heute / morgen | Summe der stündlichen Verbrauchsprognose |
+| Grundlast heute / morgen | Verbrauch − Wallbox − Wärmepumpe |
+| Solar heute / morgen | Solarertrags-Prognose |
+| Verbrauch / Solar aktuelle und nächste Stunde | Wert der laufenden bzw. nächsten Stunde (wechselt zur vollen Stunde) |
+
+Die Prognose stammt aus der VRM-Statistik *Dynamic ESS* (`stats?type=dynamic_ess&interval=hours`). Gibt es eine angepasste
+Prognose (`…_fc_adj`), wird sie genommen. Werte in Wh werden automatisch umgerechnet.
+
 ## Zusätze (optional)
 
-- [`packages/vrm_forecast_archive.yaml`](packages/vrm_forecast_archive.yaml): Template-Sensor, der die Prognose jedes Tages speichert (35 Tage).
-- [VRM Forecast](https://github.com/Xander2980/ha-vrm-forecast): Integration, die die stündliche VRM-Prognose (Verbrauch,
-  Grundlast, Solar) liest und über die Oberfläche mit dem VRM-Zugriffstoken eingerichtet wird. Empfohlen.
-- [`node-red/vrm-forecast-flow.json`](node-red/vrm-forecast-flow.json): Alternative zur Integration – Node-RED-Flow, der die stündliche VRM-Prognose (Verbrauch, Grundlast, Solar)
+- [`cards/packages/vrm_forecast_archive.yaml`](cards/packages/vrm_forecast_archive.yaml): Template-Sensor, der die Prognose jedes Tages speichert (35 Tage).
+- [`cards/node-red/vrm-forecast-flow.json`](cards/node-red/vrm-forecast-flow.json): ohne die Integration: Node-RED-Flow, der die stündliche VRM-Prognose (Verbrauch, Grundlast, Solar)
   mit dem Node [victron-vrm-api](https://flows.nodered.org/node/victron-vrm-api) holt und `sensor.vrm_forecast_hours` schreibt.
   Nach dem Import im VRM-Node den eigenen VRM-Zugang und die Installation (Site-ID) wählen, im Sensor-Node den Home-Assistant-Server.
 
 ## Fehlersuche
 
-- **Karte nicht gefunden**: Ressource prüfen und den Browser-Cache leeren.
+- **Karte nicht gefunden**: Die Integration muss eingerichtet sein (sie lädt die Karten); dann den Browser-Cache leeren (Strg+F5). Bei der JS-Datei von Hand: Ressource unter Einstellungen → Dashboards → Ressourcen prüfen.
 - **Diagramm leer**: Die Zähler brauchen Langzeitstatistik (Entwicklerwerkzeuge → Statistik). Neue Sensoren liefern erst nach einer Stunde Werte.
 - **Netz-Fluss falsch herum**: `grid: invert: true`.
+- **Das Token ist ungültig** – neues Token erstellen; nur das Token kopieren (mit oder ohne vorangestelltes „Token“).
+- **Sensoren unbekannt** – VRM hat für diese Installation noch keine Prognose (braucht einige Tage Verlauf).
+- **Debug-Log**: `logger: logs: custom_components.vrm_forecast: debug`.
+
+## Entwicklung
+
+- `custom_components/vrm_forecast/` – die Integration (Python). Tests: `python -m pytest` (braucht `pytest-homeassistant-custom-component`).
+- `cards/src/` – die Karten (reines JavaScript, keine Abhängigkeiten). `cards/build.sh` fügt die Dateien zu
+  `custom_components/vrm_forecast/frontend/vrm-style-cards.js` zusammen, das die Integration ausliefert.
 
 ## Lizenz
 

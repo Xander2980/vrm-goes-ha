@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+- Cards and forecast integration are now one HACS integration, "VRM goes HA" (repository `Xander2980/vrm-goes-ha`). The integration serves the cards and loads them on every dashboard – no resource to add.
+- The card picker no longer shows duplicates when the card file is loaded twice.
+
 ## 1.0.1
 - Fix: statistics queries with unset sensors (e.g. no `battery.soc`) or no ids at all made the chart and compare cards fail with "Error while loading".
 - Fix: after a failed load the card retried on every Home Assistant state change; it now retries at most once a minute.

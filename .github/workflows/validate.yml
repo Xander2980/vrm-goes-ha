@@ -26,3 +26,15 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install pytest pytest-homeassistant-custom-component && python -m pytest -q
+  cards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build and check syntax
+        run: |
+          sh cards/build.sh
+          node --check custom_components/vrm_forecast/frontend/vrm-style-cards.js
+          git diff --exit-code custom_components/vrm_forecast/frontend/ || (echo "Card bundle is not up to date – run cards/build.sh and commit" && exit 1)

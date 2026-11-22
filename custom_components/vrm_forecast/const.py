@@ -4,6 +4,7 @@ DOMAIN = "vrm_forecast"
 
 API_BASE = "https://vrmapi.victronenergy.com/v2"
 TOKENS_URL = "https://vrm.victronenergy.com/access-tokens"
+FRONTEND_URL = "/vrm_forecast/vrm-style-cards.js"
 
 CONF_API_TOKEN = "api_token"
 CONF_SITE_ID = "site_id"

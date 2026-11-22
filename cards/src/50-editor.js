@@ -331,7 +331,7 @@ class VrmCardEditor extends HTMLElement {
     const msg = this.shadowRoot.getElementById("msg");
     try {
       const fc = await vrmDetectVrmForecast(this._hass);
-      if (!fc) { msg.textContent = L_("Integration „VRM Forecast“ nicht gefunden."); return; }
+      if (!fc) { msg.textContent = L_("Integration „VRM goes HA“ nicht gefunden."); return; }
       this._config.forecast = Object.assign({}, this._config.forecast || {}, fc);
       this._msg = L_("Prognose-Sensoren übernommen.");
       this._built = false; this._render(); this._changed();

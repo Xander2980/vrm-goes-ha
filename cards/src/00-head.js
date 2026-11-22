@@ -7,7 +7,7 @@
  * Not affiliated with or endorsed by Victron Energy. "Victron" and "VRM" are trademarks of Victron Energy B.V.
  * License: MIT
  */
-const VRM_VERSION = "1.0.1";
+const VRM_VERSION = "1.1.0";
 
 // ---------------------------------------------------------------- Language (de / en)
 let VRM_LANG = "en";

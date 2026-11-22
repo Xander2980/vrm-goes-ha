@@ -74,7 +74,7 @@ const VRM_EN = {
   "Gesamt-Solarleistung (optional)": "Total solar power (optional)",
   "Grundlast-Vergleich": "Base load comparison",
   "Hell": "Light",
-  "Integration „VRM Forecast“ nicht gefunden.": "Integration \"VRM Forecast\" not found.",
+  "Integration „VRM goes HA“ nicht gefunden.": "Integration \"VRM goes HA\" not found.",
   "Karten": "Cards",
   "Keine Geräte der Victron-GX-Integration gefunden.": "No devices of the Victron GX integration found.",
   "Laderegler": "Solar charger",

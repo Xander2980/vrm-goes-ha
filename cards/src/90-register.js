@@ -41,8 +41,9 @@ vrmDefine("vrm-base-compare-card", VrmBaseCompareCard);   // old name, still wor
 vrmDefine("vrm-dashboard-card", VrmDashboardCard);
 
 window.customCards = window.customCards || [];
-window.customCards.push(
-  { type: "vrm-dashboard-card", name: "VRM Style – Dashboard", description: "All VRM style cards with one configuration", documentationURL: "https://github.com/Xander2980/vrm-style-cards" },
+// skip if the bundle is loaded twice (integration + manual resource), so the card picker shows no duplicates
+if (!window.customCards.some((c) => c.type === "vrm-dashboard-card")) window.customCards.push(
+  { type: "vrm-dashboard-card", name: "VRM Style – Dashboard", description: "All VRM style cards with one configuration", documentationURL: "https://github.com/Xander2980/vrm-goes-ha" },
   { type: "vrm-overview-card", name: "VRM Style – Overview", description: "Energy flow overview like the Victron VRM portal" },
   { type: "vrm-chart-card", name: "VRM Style – Chart", description: "Consumption / solar / battery chart with forecasts and time range picker" },
   { type: "vrm-compare-card", name: "VRM Style – Forecast comparison", description: "Own forecast vs. VRM forecast vs. actual (metric: solar | baseload)" },
