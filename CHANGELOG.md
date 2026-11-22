@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1
+- Fix: phone layout – the power value of the PV inverter and PV charger boxes and the ESS line of the battery box were covered by the rows below.
+
 ## 1.1.0
 - Cards and forecast integration are now one HACS integration, "VRM goes HA" (repository `Xander2980/vrm-goes-ha`). The integration serves the cards and loads them on every dashboard – no resource to add.
 - The card picker no longer shows duplicates when the card file is loaded twice.

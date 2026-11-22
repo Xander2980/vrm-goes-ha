@@ -7,7 +7,7 @@
  * Not affiliated with or endorsed by Victron Energy. "Victron" and "VRM" are trademarks of Victron Energy B.V.
  * License: MIT
  */
-const VRM_VERSION = "1.1.0";
+const VRM_VERSION = "1.1.1";
 
 // ---------------------------------------------------------------- Language (de / en)
 let VRM_LANG = "en";
@@ -460,11 +460,11 @@ class VrmOverviewCard extends HTMLElement {
       if (has.mppt) { rail(null, "M522 522 H710"); L.flows.f_mppt = "M710 522 H522"; }
       L.solBox = [1062, 105, 330, 118]; L.wxBox = [1062, has.sol ? 233 : 105, 330, 132];
     } else {
-      const pvH = 76 + Math.max(1, pvRows.length) * 28;
-      const mH = 78 + Math.max(1, nM) * 65;
+      const pvH = 92 + Math.max(1, pvRows.length) * 28;   // header: two-line title + value
+      const mH = 92 + Math.max(1, nM) * 65;
       L.boxes = {
         grid: [10, 62, 114, gPh ? 62 + gPh * 40 : 62], load: [140, 62, 114, lPh ? 62 + lPh * 28 : 62], pvinv: [10, 400, 114, pvH],
-        bat: [140, 450, 114, has.bat ? 110 + this._batRows().length * 44 + (this._c.battery.ess_state ? 62 : 0) : 0], mppt: [269, 400, 114, mH],
+        bat: [140, 450, 114, has.bat ? 128 + this._batRows().length * 44 + (this._c.battery.ess_state ? 62 : 0) : 0], mppt: [269, 400, 114, mH],
       };
       const gBm = B_(L.boxes.grid), lBm = B_(L.boxes.load);
       let bottom = 390;
@@ -651,7 +651,7 @@ class VrmOverviewCard extends HTMLElement {
   .box .top { padding:9px 9px 0 9px; }
   .box .lower { padding:0 9px; }
   .ttl { font-size:12.5px; gap:5px; } .ttl ha-icon { --mdc-icon-size:16px; flex:none; }
-  .big { font-size:21px; margin-top:6px; }
+  .big { font-size:21px; margin-top:6px; line-height:26px; white-space:nowrap; }
   .row { display:flex; align-items:center; height:28px; font-size:12px; border-bottom:1px solid var(--sep); color:var(--t2); }
   .row:last-child { border-bottom:none; }
   .row .l { color:var(--t2); width:45px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .row .l.wide { flex:1; width:auto; margin-right:4px; }
@@ -696,25 +696,25 @@ class VrmOverviewCard extends HTMLElement {
     </div></div>` : ""}
   <div class="inv" id="b_inv"><div class="blue"><ha-icon icon="mdi:current-ac"></ha-icon></div><div class="lbl" id="sys"></div></div>
   ${has.pvinv ? `<div class="box" id="b_pvinv" style="${this._boxStyle(B.pvinv)}">
-    <div class="top" style="height:76px"><div class="ttl" style="align-items:flex-start"><ha-icon icon="mdi:white-balance-sunny" style="color:#f0a030"></ha-icon><span>${L_("PV‑Wechsel&shy;richter")}</span></div>
+    <div class="top" style="height:92px"><div class="ttl" style="align-items:flex-start"><ha-icon icon="mdi:white-balance-sunny" style="color:#f0a030"></ha-icon><span>${L_("PV‑Wechsel&shy;richter")}</span></div>
       <div class="badge"><ha-icon icon="mdi:flash"></ha-icon></div>
       <div class="big" style="margin-top:4px"><span id="pvinv_p"></span> <span class="u">W</span></div></div>
-    <div class="lower" style="height:${B.pvinv[3] - 76}px">
+    <div class="lower" style="height:${B.pvinv[3] - 92}px">
       ${pvRows.map((r, i) => `<div class="row"><span class="l${r.wide ? " wide" : ""}" title="${vrmEsc(r.l)}">${vrmEsc(r.l)}</span><b id="pw${i}"></b>&nbsp;W</div>`).join("")}
     </div></div>` : ""}
   ${has.bat ? `<div class="box" id="b_bat" style="${this._boxStyle(B.bat)}">
-    <div class="top" style="height:110px"><div class="ttl"><ha-icon icon="mdi:battery-charging-outline" style="color:#3c87d6"></ha-icon><span id="bat_st"></span></div>
+    <div class="top" style="height:128px"><div class="ttl"><ha-icon icon="mdi:battery-charging-outline" style="color:#3c87d6"></ha-icon><span id="bat_st"></span></div>
       <div class="sub"><span id="bat_p"></span> W</div>
       <div class="big"><span id="bat_soc"></span> <span class="u">%</span></div>
       ${bat.ess_state ? `<div class="ess">${vrmEsc(bat.ess_name || "ESS #1")} <ha-icon icon="mdi:chevron-up"></ha-icon></div>` : ""}</div>
-    <div class="lower" style="height:${B.bat[3] - 110}px">
+    <div class="lower" style="height:${B.bat[3] - 128}px">
       ${this._batRows().map((r) => `<div class="kv"><div>${L_(r[0] === "Temperatur" ? "Temp." : r[0])}</div><div><b id="${r[1]}"></b> ${r[2]}</div></div>`).join("")}
       ${bat.ess_state ? `<div class="kv" style="height:62px"><div>${vrmEsc(bat.ess_name || "ESS #1")}</div><div><b id="ess"></b></div></div>` : ""}
     </div></div>` : ""}
   ${has.mppt ? `<div class="box" id="b_mppt" style="${this._boxStyle(B.mppt)}">
-    <div class="top" style="height:78px"><div class="ttl" style="align-items:flex-start"><ha-icon icon="mdi:white-balance-sunny" style="color:#f0a030"></ha-icon><span>${L_("PV‑Lade&shy;gerät")}</span></div>
+    <div class="top" style="height:92px"><div class="ttl" style="align-items:flex-start"><ha-icon icon="mdi:white-balance-sunny" style="color:#f0a030"></ha-icon><span>${L_("PV‑Lade&shy;gerät")}</span></div>
       <div class="big"><span id="mppt_p"></span> <span class="u">W</span></div></div>
-    <div class="lower" style="height:${B.mppt[3] - 78}px">
+    <div class="lower" style="height:${B.mppt[3] - 92}px">
       ${c.chargers.map((m, i) => `<div class="mrow"><div class="n">${vrmEsc(m.name || `MPPT ${i + 1}`)}</div><div class="v"><span>${m.voltage ? `<b id="c${i}v"></b> V` : ""}</span><span>${m.current ? `<b id="c${i}a"></b> A` : ""}</span></div><div><b id="c${i}w"></b> W</div></div>`).join("")}
     </div></div>` : ""}
   ${has.devs ? this._devHtml(L) : ""}
