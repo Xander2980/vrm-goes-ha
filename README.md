@@ -2,6 +2,8 @@
 
 Victron-VRM-Look für Home Assistant – zwei Teile:
 
+> Inoffizielles Projekt, nicht mit Victron Energy verbunden und nicht von Victron Energy unterstützt. „Victron“, „Victron Energy“ und „VRM“ sind Marken bzw. Namen der Victron Energy B.V. und werden hier nur verwendet, um die Kompatibilität zu beschreiben.
+
 | Ordner | Was | HACS-Typ |
 |---|---|---|
 | [`vrm-style-cards/`](vrm-style-cards/) | Lovelace-Karten im VRM-Stil (Übersicht, Charts, Vergleich, visueller Editor) | Plugin (Dashboard) |
