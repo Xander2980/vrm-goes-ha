@@ -45,6 +45,17 @@ The integration loads the cards on every dashboard automatically – no resource
 - **VRM forecast sensors**: consumption, base load and solar for today, tomorrow, the current and the next hour, plus
   an hourly list for the charts.
 
+## Requirements
+
+| What | Needed for | Where |
+|---|---|---|
+| **Home Assistant 2024.12** or newer | everything (the integration icon needs 2026.3) | – |
+| **Victron GX** integration | the overview and the chart get their live values and energy counters from the GX device (Cerbo GX, Venus OS). The editor button *Detect Victron GX automatically* fills in all devices. | built into Home Assistant: Settings → Devices & services → *Add integration* → **Victron GX** (MQTT must be enabled on the GX device: Settings → Services → MQTT) |
+| **VRM access token** | the VRM forecast sensors and the VRM comparison | VRM portal → Preferences → Integrations → Access tokens |
+| **Deutscher Wetterdienst** (recommended) | the irradiance forecast (`forecast.irradiance`) that makes the own solar forecast much more accurate | HACS: [FL550/dwd_weather](https://github.com/FL550/dwd_weather) → in the options enable the sensor *Global irradiance*. Without it the own solar forecast uses the cloud cover of the weather entity. Outside Germany any sensor with the same `data` format works. |
+
+The cards also work with other inverters and meters – any power and energy sensors can be entered.
+
 ## Installation
 
 Open directly in Home Assistant (needs HACS):

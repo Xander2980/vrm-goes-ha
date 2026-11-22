@@ -45,6 +45,17 @@ Die Integration lädt die Karten automatisch auf jedem Dashboard – keine Resso
 - **VRM-Prognose-Sensoren**: Verbrauch, Grundlast und Solar für heute, morgen, die laufende und die nächste Stunde,
   dazu eine Stundenliste für die Diagramme.
 
+## Voraussetzungen
+
+| Was | Wofür | Wo |
+|---|---|---|
+| **Home Assistant 2024.12** oder neuer | alles (das Icon der Integration braucht 2026.3) | – |
+| Integration **Victron GX** | Übersicht und Diagramm holen ihre Live-Werte und Energiezähler vom GX-Gerät (Cerbo GX, Venus OS). Der Editor-Knopf *Victron GX automatisch erkennen* trägt alle Geräte ein. | in Home Assistant enthalten: Einstellungen → Geräte & Dienste → *Integration hinzufügen* → **Victron GX** (am GX-Gerät muss MQTT eingeschaltet sein: Einstellungen → Dienste → MQTT) |
+| **VRM-Zugriffstoken** | die VRM-Prognose-Sensoren und den Vergleich mit VRM | VRM-Portal → Einstellungen → Integrationen → Zugriffstoken |
+| **Deutscher Wetterdienst** (empfohlen) | die Einstrahlungsprognose (`forecast.irradiance`), mit der die eigene Solarprognose deutlich genauer wird | HACS: [FL550/dwd_weather](https://github.com/FL550/dwd_weather) → in den Optionen den Sensor *Globalstrahlung* einschalten. Ohne ihn rechnet die eigene Solarprognose mit der Bewölkung der Wetter-Entität. |
+
+Die Karten funktionieren auch mit anderen Wechselrichtern und Zählern – es lassen sich beliebige Leistungs- und Energiesensoren eintragen.
+
 ## Installation
 
 Direkt in Home Assistant öffnen (HACS nötig):
